@@ -1,0 +1,181 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// ENUMS
+
+enum AgentStatus {
+  ACTIVE
+  SUSPENDED
+  ARCHIVED
+}
+
+enum PurchaseRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum CardStatus {
+  PENDING
+  ISSUED
+  ACTIVE
+  USED
+  EXPIRED
+  FAILED
+}
+
+enum TransactionStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
+enum ApprovalDecision {
+  APPROVED
+  REJECTED
+}
+
+/// CORE MODELS
+
+model Agent {
+  id    String @id @default(cuid())
+
+  name        String
+  description String?
+
+  status AgentStatus @default(ACTIVE)
+
+  // Spend policy baked into Agent (can be moved to a separate Policy model later)
+  dailyLimit        Decimal @db.Decimal(18, 6)
+  transactionLimit  Decimal @db.Decimal(18, 6)
+  approvalThreshold Decimal @db.Decimal(18, 6)
+
+  // Relations
+  wallet           Wallet?
+  cards            Card[]
+  purchaseRequests PurchaseRequest[]
+  transactions     Transaction[]
+  auditLogs        AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Wallet {
+  id String @id @default(cuid())
+
+  address             String  @unique
+  encryptedPrivateKey String  // no plaintext private keys
+  balance             Decimal @db.Decimal(18, 6)
+
+  agentId String @unique
+  agent   Agent  @relation(fields: [agentId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+/// Purchase Request is the core of the flow:
+/// Agent → PurchaseRequest → Approval → Card → Transaction
+model PurchaseRequest {
+  id String @id @default(cuid())
+
+  title    String
+  merchant String
+  amount   Decimal @db.Decimal(18, 6)
+  reason   String?
+
+  status           PurchaseRequestStatus @default(PENDING)
+  requiresApproval Boolean
+
+  approvedAt DateTime?
+  rejectedAt DateTime?
+
+  agentId String
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  card     Card?
+  approval Approval?
+
+  createdAt DateTime @default(now())
+}
+
+model Card {
+  id String @id @default(cuid())
+
+  marqetaId String?
+
+  last4       String?
+  expiryMonth Int?
+  expiryYear  Int?
+
+  amount Decimal @db.Decimal(18, 6)
+
+  status CardStatus @default(PENDING)
+
+  // 1:1 with PurchaseRequest – FK must be UNIQUE
+  purchaseRequestId String? @unique
+  purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
+
+  agentId String
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id String @id @default(cuid())
+
+  merchant String?
+  amount   Decimal @db.Decimal(18, 6)
+
+  status TransactionStatus @default(PENDING)
+
+  txHash String?
+
+  cardId String?
+  card   Card?  @relation(fields: [cardId], references: [id])
+
+  agentId String
+  agent   Agent @relation(fields: [agentId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Approval {
+  id String @id @default(cuid())
+
+  decision ApprovalDecision
+  note     String?
+
+  // One approval record per purchase request
+  purchaseRequestId String  @unique
+  purchaseRequest   PurchaseRequest @relation(fields: [purchaseRequestId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  actor    String   // e.g. "user:123", "agent:xyz", "system"
+  action   String   // e.g. "Agent Created", "Wallet Funded", "Purchase Requested"
+  metadata Json?    // arbitrary JSON diff/context
+
+  // Optional link to Agent for tying events directly to an agent
+  agentId String?
+  agent   Agent? @relation(fields: [agentId], references: [id])
+
+  createdAt DateTime @default(now())
+}

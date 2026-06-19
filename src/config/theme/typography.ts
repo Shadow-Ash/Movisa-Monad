@@ -1,11 +1,36 @@
 export const typography = {
-    displayXL: '72px',
+    displayXL: {
+        size: '72px',
+        weight: '800',
+    },
 
-    headlineLG: '40px',
-    headlineMD: '24px',
+    headlineLG: {
+        size: '40px',
+        weight: '800',
+    },
 
-    bodyLG: '18px',
-    bodyMD: '15px',
+    headlineMD: {
+        size: '24px',
+        weight: '700',
+    },
 
-    labelSM: '12px',
+    bodyLG: {
+        size: '18px',
+        weight: '500',
+    },
+
+    bodyMD: {
+        size: '15px',
+        weight: '500',
+    },
+
+    labelSM: {
+        size: '12px',
+        weight: '600',
+    },
+
+    monoData: {
+        size: '14px',
+        weight: '500',
+    },
 } as const;

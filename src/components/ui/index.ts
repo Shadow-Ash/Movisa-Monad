@@ -4,3 +4,7 @@ export * from './container';
 export * from './glass-card';
 export * from './section';
 export * from './typography';
+export * from './badge';
+export * from './divider';
+export * from './heading';
+export * from './status-badge';

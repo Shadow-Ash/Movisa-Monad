@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { inter, jetbrainsMono } from '@/config/fonts';
 
 import './globals.css';
+import { Providers } from '@/lib/api';
 
 export const metadata: Metadata = {
   title: 'MOVISA',
@@ -29,7 +30,9 @@ export default function RootLayout({
           antialiased
         `}
       >
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
