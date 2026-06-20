@@ -1,8 +1,8 @@
-import { notFound } from 'next/navigation';
-
-import { getAgent } from '@/lib/queries/agent';
-import { SyncBalanceButton } from "@/components/agents/sync-balance-button";
+import { notFound } from "next/navigation";
 import Link from "next/link";
+
+import { getAgent } from "@/lib/queries/agent";
+import { SyncBalanceButton } from "@/components/agents/sync-balance-button";
 
 export default async function AgentPage({
     params,
@@ -11,11 +11,9 @@ export default async function AgentPage({
         agentId: string;
     }>;
 }) {
-    const { agentId } =
-        await params;
+    const { agentId } = await params;
 
-    const agent =
-        await getAgent(agentId);
+    const agent = await getAgent(agentId);
 
     if (!agent) {
         notFound();
@@ -24,9 +22,7 @@ export default async function AgentPage({
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-4xl font-bold">
-                    {agent.name}
-                </h1>
+                <h1 className="text-4xl font-bold">{agent.name}</h1>
 
                 <p className="mt-2 text-onSurfaceVariant">
                     {agent.description}
@@ -43,15 +39,11 @@ export default async function AgentPage({
                 </div>
 
                 <div className="rounded-xl border border-white/10 p-6">
-                    <p>Balance</p><SyncBalanceButton
-                        agentId={agent.id}
-                    />
+                    <p>Balance</p>
+                    <SyncBalanceButton agentId={agent.id} />
 
                     <h3 className="mt-3 text-2xl font-bold">
-                        {String(
-                            agent.wallet?.balance ??
-                            0,
-                        )}
+                        {String(agent.wallet?.balance ?? 0)}
                     </h3>
                 </div>
 
@@ -90,29 +82,43 @@ export default async function AgentPage({
                         </p>
                     ) : (
                         <div className="space-y-3">
-                            {agent.purchaseRequests.map(
-                                (request) => (
-                                    <div
-                                        key={request.id}
-                                        className="rounded-lg border border-white/10 p-4"
-                                    >
-                                        <p className="font-semibold">
-                                            {request.merchant}
-                                        </p>
+                            {agent.purchaseRequests.map((request) => (
+                                <div
+                                    key={request.id}
+                                    className="rounded-lg border border-white/10 p-4"
+                                >
+                                    <p className="font-semibold">
+                                        {request.merchant}
+                                    </p>
 
-                                        <p>
-                                            $
-                                            {String(
-                                                request.amount,
-                                            )}
-                                        </p>
+                                    <p>
+                                        ${String(request.amount)}
+                                    </p>
 
-                                        <p>
-                                            {request.status}
-                                        </p>
+                                    <p>{request.status}</p>
+
+                                    <div className="mt-3">
+                                        <button
+                                            onClick={async () => {
+                                                await fetch("/api/cards/issue", {
+                                                    method: "POST",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                    },
+                                                    body: JSON.stringify({
+                                                        purchaseRequestId: request.id,
+                                                    }),
+                                                });
+
+                                                location.reload();
+                                            }}
+                                            className="rounded-lg bg-primary px-3 py-1 text-sm font-medium text-black"
+                                        >
+                                            Issue Card
+                                        </button>
                                     </div>
-                                ),
-                            )}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>

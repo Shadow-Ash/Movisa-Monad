@@ -113,7 +113,9 @@ model PurchaseRequest {
 model Card {
   id String @id @default(cuid())
 
-  marqetaId String?
+  marqetaId        String? @unique
+  marqetaUserToken String?
+  cardProductToken String?
 
   last4       String?
   expiryMonth Int?
@@ -124,7 +126,7 @@ model Card {
   status CardStatus @default(PENDING)
 
   // 1:1 with PurchaseRequest – FK must be UNIQUE
-  purchaseRequestId String? @unique
+  purchaseRequestId String?        @unique
   purchaseRequest   PurchaseRequest? @relation(fields: [purchaseRequestId], references: [id])
 
   agentId String
@@ -161,7 +163,7 @@ model Approval {
   note     String?
 
   // One approval record per purchase request
-  purchaseRequestId String  @unique
+  purchaseRequestId String        @unique
   purchaseRequest   PurchaseRequest @relation(fields: [purchaseRequestId], references: [id])
 
   createdAt DateTime @default(now())
