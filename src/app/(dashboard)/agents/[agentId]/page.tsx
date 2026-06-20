@@ -6,6 +6,8 @@ import { SyncBalanceButton } from "@/components/agents/sync-balance-button";
 import { CopyAddressButton } from "@/components/agents/copy-address-button";
 import { InlinePurchaseRequestForm } from "@/components/purchase-requests/inline-purchase-request-form";
 
+export const dynamic = 'force-dynamic';
+
 // --- Sub-components for cleaner Tailwind architecture ---
 
 function MiniVirtualCard() {

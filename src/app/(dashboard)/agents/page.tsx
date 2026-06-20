@@ -3,6 +3,8 @@ import Link from "next/link";
 import { AgentsTable } from "@/components/agents/agents-table";
 import { getAgents } from "@/lib/queries/agents";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AgentsPage() {
     const agents = await getAgents();
 

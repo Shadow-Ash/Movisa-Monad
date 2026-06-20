@@ -1,5 +1,7 @@
 import { getPendingApprovals } from "@/lib/queries/approvals";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ApprovalsPage() {
     const approvals =
         await getPendingApprovals();
