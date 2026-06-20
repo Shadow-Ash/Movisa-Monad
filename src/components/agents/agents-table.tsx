@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 type Props = {
     agents: any[];
 };
@@ -31,7 +33,12 @@ export function AgentsTable({
                             className="border-b border-white/5"
                         >
                             <td className="p-4">
-                                {agent.name}
+                                <Link
+                                    href={`/agents/${agent.id}`}
+                                    className="hover:text-primary"
+                                >
+                                    {agent.name}
+                                </Link>
                             </td>
 
                             <td className="p-4">
