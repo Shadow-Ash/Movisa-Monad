@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { getAgent } from "@/lib/queries/agent";
 import { SyncBalanceButton } from "@/components/agents/sync-balance-button";
-import Link from "next/link";
+import { CopyAddressButton } from '@/components/agents/copy-address-button';
 
 export default async function AgentPage({
     params,
@@ -75,7 +75,7 @@ export default async function AgentPage({
                     <span className="text-[10px] font-mono font-bold tracking-widest text-zinc-500 uppercase mb-3">
                         Virtual Card Reference
                     </span>
-                    <MiniVirtualCard />
+                    {/* <MiniVirtualCard /> */}
                 </div>
 
             </div>
