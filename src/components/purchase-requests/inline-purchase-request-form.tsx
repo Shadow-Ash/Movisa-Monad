@@ -7,89 +7,141 @@ interface Props {
     agentId: string;
 }
 
-export function InlinePurchaseRequestForm({ agentId }: Props) {
+export function InlinePurchaseRequestForm({
+    agentId,
+}: Props) {
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const [loading, setLoading] =
+        useState(false);
+
+    async function handleSubmit(
+        e: React.FormEvent<HTMLFormElement>,
+    ) {
         e.preventDefault();
+
+        const form =
+            e.currentTarget;
+
         setLoading(true);
 
-        const formData = new FormData(e.currentTarget);
-        const requestName = formData.get('requestName') as string;
-        const amount = Number(formData.get('amount'));
-        const network = formData.get('network') as string;
+        const formData =
+            new FormData(form);
+
+        const requestName =
+            formData.get(
+                'requestName',
+            ) as string;
+
+        const amount = Number(
+            formData.get('amount'),
+        );
+
+        const network =
+            formData.get(
+                'network',
+            ) as string;
 
         const payload = {
             agentId,
+
             title: requestName,
-            merchant: `${network} Terminal`, // use network to fulfill merchant field
+
+            merchant: `${network} Terminal`,
+
             amount,
+
             reason: `Autonomous request executed on ${network}`,
         };
 
         try {
-            const response = await fetch('/api/purchase-requests', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
+            const response =
+                await fetch(
+                    '/api/purchase-requests',
+                    {
+                        method: 'POST',
 
-            const data = await response.json();
+                        headers: {
+                            'Content-Type':
+                                'application/json',
+                        },
+
+                        body: JSON.stringify(
+                            payload,
+                        ),
+                    },
+                );
+
+            const data =
+                await response.json();
+
             if (data.success) {
-                e.currentTarget.reset();
+                form.reset();
+
                 router.refresh();
             }
         } catch (err) {
-            console.error('Error submitting purchase request:', err);
+            console.error(
+                'Error submitting purchase request:',
+                err,
+            );
         } finally {
             setLoading(false);
         }
     }
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-4"
+        >
             <div>
-                <label className="block text-[9px] font-mono font-bold tracking-widest text-zinc-500 uppercase mb-1.5">
+                <label className="mb-1.5 block text-[9px] font-mono font-bold uppercase tracking-widest text-zinc-500">
                     Request Name
                 </label>
+
                 <input
                     name="requestName"
                     type="text"
                     required
                     placeholder="e.g. LLM API Access"
-                    className="w-full rounded-xl border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-xs text-white placeholder-zinc-700 focus:outline-none focus:border-zinc-800 transition-colors"
+                    className="w-full rounded-xl border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-xs text-white placeholder-zinc-700 transition-colors focus:border-zinc-800 focus:outline-none"
                 />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-[9px] font-mono font-bold tracking-widest text-zinc-500 uppercase mb-1.5">
+                    <label className="mb-1.5 block text-[9px] font-mono font-bold uppercase tracking-widest text-zinc-500">
                         Amount ($)
                     </label>
+
                     <input
                         name="amount"
                         type="number"
                         required
                         min="1"
                         placeholder="USDC"
-                        className="w-full rounded-xl border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-xs text-white placeholder-zinc-700 focus:outline-none focus:border-zinc-800 transition-colors"
+                        className="w-full rounded-xl border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-xs text-white placeholder-zinc-700 transition-colors focus:border-zinc-800 focus:outline-none"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-[9px] font-mono font-bold tracking-widest text-zinc-500 uppercase mb-1.5">
+                    <label className="mb-1.5 block text-[9px] font-mono font-bold uppercase tracking-widest text-zinc-500">
                         Network
                     </label>
+
                     <select
                         name="network"
                         defaultValue="Monad Testnet"
-                        className="w-full rounded-xl border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-xs text-white focus:outline-none focus:border-zinc-800 transition-colors appearance-none cursor-pointer"
+                        className="w-full cursor-pointer appearance-none rounded-xl border border-zinc-900 bg-zinc-950 px-4 py-2.5 text-xs text-white transition-colors focus:border-zinc-800 focus:outline-none"
                     >
-                        <option value="Monad Testnet">Monad Testnet</option>
-                        <option value="Ethereum Mainnet">Ethereum</option>
+                        <option value="Monad Testnet">
+                            Monad Testnet
+                        </option>
+
+                        <option value="Ethereum Mainnet">
+                            Ethereum
+                        </option>
                     </select>
                 </div>
             </div>
@@ -97,9 +149,11 @@ export function InlinePurchaseRequestForm({ agentId }: Props) {
             <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 w-full h-10 inline-flex items-center justify-center rounded-xl bg-purple-600 hover:bg-purple-500 active:scale-[0.98] transition-all text-xs font-bold text-white uppercase tracking-wider"
+                className="mt-2 inline-flex h-10 w-full items-center justify-center rounded-xl bg-purple-600 text-xs font-bold uppercase tracking-wider text-white transition-all hover:bg-purple-500 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
-                {loading ? 'Initiating...' : 'Initiate Request'}
+                {loading
+                    ? 'Initiating...'
+                    : 'Initiate Request'}
             </button>
         </form>
     );

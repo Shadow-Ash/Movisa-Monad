@@ -5,6 +5,7 @@ import { getAgent } from "@/lib/queries/agent";
 import { SyncBalanceButton } from "@/components/agents/sync-balance-button";
 import { CopyAddressButton } from "@/components/agents/copy-address-button";
 import { InlinePurchaseRequestForm } from "@/components/purchase-requests/inline-purchase-request-form";
+import { IssueCardButton } from "@/components/cards/issue-card-button";
 
 export const dynamic = 'force-dynamic';
 
@@ -162,8 +163,12 @@ export default async function AgentPage({
                                     <th className="py-3.5 text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
                                         Amount
                                     </th>
-                                    <th className="py-3.5 pr-6 text-right text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                                    <th className="py-3.5 text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
                                         Status
+                                    </th>
+
+                                    <th className="py-3.5 pr-6 text-right text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                                        Actions
                                     </th>
                                 </tr>
                             </thead>
@@ -181,24 +186,33 @@ export default async function AgentPage({
                                                 day: "numeric",
                                             })}
                                         </td>
+
                                         <td className="py-4 text-xs font-semibold text-white">
                                             {req.merchant || req.title}
                                         </td>
+
                                         <td className="py-4 text-xs font-mono text-zinc-300">
                                             {String(req.amount)} USDC
                                         </td>
-                                        <td className="py-4 pr-6 text-right">
+
+                                        <td className="py-4">
                                             <span
                                                 className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium tracking-tight ${req.status === "APPROVED" ||
                                                     req.status === "COMPLETED"
-                                                    ? "text-emerald-400 bg-emerald-950/20 border-emerald-900/30"
+                                                    ? "border-emerald-900/30 bg-emerald-950/20 text-emerald-400"
                                                     : req.status === "PENDING"
-                                                        ? "text-purple-400 bg-purple-950/20 border-purple-900/30"
-                                                        : "text-red-400 bg-red-950/20 border-red-900/30"
+                                                        ? "border-purple-900/30 bg-purple-950/20 text-purple-400"
+                                                        : "border-red-900/30 bg-red-950/20 text-red-400"
                                                     }`}
                                             >
                                                 {req.status}
                                             </span>
+                                        </td>
+
+                                        <td className="py-4 pr-6 text-right">
+                                            <IssueCardButton
+                                                purchaseRequestId={req.id}
+                                            />
                                         </td>
                                     </tr>
                                 ))}
