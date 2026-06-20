@@ -30,4 +30,8 @@ export const dashboardNavigation = [
         label: 'Audit Logs',
         href: ROUTES.AUDIT_LOGS,
     },
+    {
+        label: 'Transaction',
+        href: ROUTES.TRANSACTIONS,
+    },
 ] as const;

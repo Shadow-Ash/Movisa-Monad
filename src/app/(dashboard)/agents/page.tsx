@@ -26,9 +26,17 @@ export default async function AgentsPage() {
                 >
                     Create Agent
                 </Link>
+
+
             </div>
 
             <AgentsTable agents={agents} />
+            <Link
+                href="/transactions"
+                className="inline-flex h-10 items-center justify-center rounded-xl bg-white px-5 text-xs font-bold tracking-tight text-black transition-all duration-200 hover:bg-zinc-200 active:scale-[0.98]"
+            >
+                Transactions
+            </Link>
         </div>
     );
 }

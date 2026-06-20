@@ -12,4 +12,6 @@ export const ROUTES = {
     APPROVALS: '/approvals',
 
     AUDIT_LOGS: '/audit-logs',
+
+    TRANSACTIONS: '/transactions',
 } as const;

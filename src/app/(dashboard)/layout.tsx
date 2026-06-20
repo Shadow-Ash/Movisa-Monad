@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-    LayoutDashboard, 
-    Bot, 
-    CreditCard, 
-    Wallet, 
-    CheckSquare, 
-    FileText 
+import {
+    LayoutDashboard,
+    Bot,
+    CreditCard,
+    Wallet,
+    CheckSquare,
+    FileText
 } from 'lucide-react';
 
 import { dashboardNavigation } from '@/config/navigation';
@@ -21,6 +21,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
     'Treasury': Wallet,
     'Approvals': CheckSquare,
     'Audit Logs': FileText,
+    'transactions': FileText,
 };
 
 // --- Sub-components for cleaner Tailwind architecture ---
@@ -37,11 +38,10 @@ function SidebarLink({ href, label, isActive }: SidebarLinkProps) {
     return (
         <Link
             href={href}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 border ${
-                isActive
-                    ? 'bg-white text-black border-white'
-                    : 'text-zinc-500 border-transparent hover:text-zinc-100 hover:bg-zinc-950'
-            }`}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-200 border ${isActive
+                ? 'bg-white text-black border-white'
+                : 'text-zinc-500 border-transparent hover:text-zinc-100 hover:bg-zinc-950'
+                }`}
         >
             <Icon className="h-4 w-4 shrink-0" />
             {label}
@@ -71,8 +71,8 @@ export default function DashboardLayout({
                     <nav className="space-y-1.5">
                         {dashboardNavigation.map((item) => {
                             // Determine if current link is active
-                            const isActive = 
-                                pathname === item.href || 
+                            const isActive =
+                                pathname === item.href ||
                                 (item.href !== '/dashboard' && pathname.startsWith(item.href));
 
                             return (
