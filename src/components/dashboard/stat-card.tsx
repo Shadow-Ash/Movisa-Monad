@@ -8,12 +8,12 @@ export function StatCard({
     value,
 }: StatCardProps) {
     return (
-        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6">
-            <p className="text-sm text-onSurfaceVariant">
+        <div className="rounded-2xl border border-zinc-900 bg-zinc-950/40 backdrop-blur-md p-6 transition-all duration-300 hover:border-zinc-800">
+            <span className="text-[10px] font-mono font-bold tracking-widest text-zinc-500 uppercase">
                 {title}
-            </p>
+            </span>
 
-            <h3 className="mt-3 text-3xl font-bold">
+            <h3 className="mt-2 text-3xl font-light tracking-tight text-white">
                 {value}
             </h3>
         </div>
