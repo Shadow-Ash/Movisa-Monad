@@ -1,15 +1,14 @@
-import { ReactNode } from 'react';
+import { HTMLAttributes } from 'react';
 
 import { cn } from '@/lib/utils/cn';
 
-type SectionProps = {
-    children: ReactNode;
-    className?: string;
-};
+type SectionProps =
+    HTMLAttributes<HTMLElement>;
 
 export function Section({
     children,
     className,
+    ...props
 }: SectionProps) {
     return (
         <section
@@ -17,6 +16,7 @@ export function Section({
                 'relative py-24',
                 className,
             )}
+            {...props}
         >
             {children}
         </section>
