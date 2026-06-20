@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { getAgent } from '@/lib/queries/agent';
 import { SyncBalanceButton } from "@/components/agents/sync-balance-button";
+import Link from "next/link";
 
 export default async function AgentPage({
     params,
@@ -60,6 +61,60 @@ export default async function AgentPage({
                     <h3 className="mt-3 text-2xl font-bold">
                         {agent.status}
                     </h3>
+                </div>
+
+                <Link
+                    href={`/agents/${agent.id}/purchase-request/new`}
+                    className="inline-block rounded-lg bg-primary px-4 py-2 text-black"
+                >
+                    New Request
+                </Link>
+
+                <div className="rounded-xl border border-white/10 p-6">
+                    <div className="mb-4 flex items-center justify-between">
+                        <h2 className="text-xl font-bold">
+                            Purchase Requests
+                        </h2>
+
+                        <Link
+                            href={`/agents/${agent.id}/purchase-request/new`}
+                            className="rounded-lg bg-primary px-4 py-2 text-black"
+                        >
+                            New Request
+                        </Link>
+                    </div>
+
+                    {agent.purchaseRequests.length === 0 ? (
+                        <p className="text-onSurfaceVariant">
+                            No requests yet.
+                        </p>
+                    ) : (
+                        <div className="space-y-3">
+                            {agent.purchaseRequests.map(
+                                (request) => (
+                                    <div
+                                        key={request.id}
+                                        className="rounded-lg border border-white/10 p-4"
+                                    >
+                                        <p className="font-semibold">
+                                            {request.merchant}
+                                        </p>
+
+                                        <p>
+                                            $
+                                            {String(
+                                                request.amount,
+                                            )}
+                                        </p>
+
+                                        <p>
+                                            {request.status}
+                                        </p>
+                                    </div>
+                                ),
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
