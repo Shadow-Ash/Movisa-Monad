@@ -7,7 +7,7 @@ interface Props {
     agentId: string;
 }
 
-export function InlinePurchaseRequestForm({
+export function CreatePurchaseRequestForm({
     agentId,
 }: Props) {
     const router = useRouter();
