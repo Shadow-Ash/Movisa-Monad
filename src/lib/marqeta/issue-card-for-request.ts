@@ -39,12 +39,6 @@ export async function issueCardForRequest(
                 marqetaId:
                     card.token,
 
-                marqetaUserToken:
-                    marqetaUser.token,
-
-                cardProductToken:
-                    card.card_product_token,
-
                 last4:
                     card.last_four,
 
